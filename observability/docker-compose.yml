@@ -1,6 +1,6 @@
 services:
   prometheus:
-    user: root
+    #user: root
     image: prom/prometheus:v2.54.1
     ports:
       - 9090:9090
@@ -9,9 +9,9 @@ services:
       - --web.enable-lifecycle
       - --web.enable-remote-write-receiver
     volumes:
-      #- ~/data/prometheus-data:/prometheus
       - ./config/prometheus:/etc/prometheus
-      #- /var/run/docker.sock:/var/run/docker.sock:ro
+      #- //var/run/docker.sock://var/run/docker.sock:ro # Windows
+      #- /var/run/docker.sock:/var/run/docker.sock:ro  # Linux
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.111.0
