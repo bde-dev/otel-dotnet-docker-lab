@@ -9,29 +9,9 @@ services:
       - --web.enable-lifecycle
       - --web.enable-remote-write-receiver
     volumes:
-      - ~/data/prometheus-data:/prometheus
+      #- ~/data/prometheus-data:/prometheus
       - ./config/prometheus:/etc/prometheus
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-
-  node_exporter:
-    image: prom/node-exporter:v1.8.2
-    ports:
-      - 9100:9100
-    command:
-      - --path.rootfs=/host
-    volumes:
-      - /:/host:ro,rslave
-
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.49.1
-    ports:
-      - 8085:8080
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
+      #- /var/run/docker.sock:/var/run/docker.sock:ro
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.111.0
@@ -41,6 +21,8 @@ services:
       - 4318:4318
       - 8888:8888
       - 8889:8889
+      - 13133:13133
+      - 55679:55679
     volumes:
       - ./config/otel-collector-config.yaml:/etc/collector.yaml
 
@@ -68,8 +50,14 @@ services:
       #- GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
       - GF_INSTALL_PLUGINS=grafana-lokiexplore-app
 
-
   weatherapp:
-    image: 192.168.252.66:5001/distributed-system-mvp/weather-app:0.0.1
+    image: 192.168.252.66:5001/distributed-system-mvp/weather-app:0.0.2-otel-collector
     ports:
       - 8080:8080
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: unless-stopped
