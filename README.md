@@ -1,8 +1,10 @@
 # grafana-stack
 Piecing together a Grafana Labs stack for monitoring distributed systems.
 
-# Running the demo
-NOTE: The weather app won't work - I need to find a way to bring in an app that can hit the stack with otel data.
+# Overview
+This repository is split into two sections:
 
-But to run the stack:
-docker compose up -d
+| Component      | Description                              |
+|----------------|------------------------------------------|
+| host-metrics   | node-exporter and cadvisor exports hosts metrics to observability. Runs on Linux hosts. |
+| observability  | A boxed demo for collecting and visualizing Open Telemetry data exported by a .NET 8.0 application. |
