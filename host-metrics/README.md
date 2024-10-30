@@ -6,4 +6,4 @@ See observability/README.md for starting a Grafana stack that includes Prometheu
 # Running the demo
 On a Linux host:
 
-docker compose up -d
+    docker compose up -d
