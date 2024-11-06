@@ -36,8 +36,8 @@ datasources:
     jsonData:
       derivedFields:
         - datasourceUid: tempo
-          matcherRegex: '\"traceid\":\"(.*?)\"'
+          matcherRegex: "trace_id"
+          matcherType: "label"
           name: TraceID
           url: '$${__value.raw}'
           urlDisplayLabel: View Trace
-

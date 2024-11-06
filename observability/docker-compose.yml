@@ -26,7 +26,8 @@ services:
       - otel_network
       - default
     volumes:
-      - ./config/otel-collector-config.yaml:/etc/collector.yaml
+      #- ./config/otel-collector-config.yaml:/etc/collector.yaml
+      - ./config/otel-collector-newloki-config.yaml:/etc/collector.yaml
 
   tempo:
     image: grafana/tempo:2.6.0
