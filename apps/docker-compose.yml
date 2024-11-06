@@ -1,0 +1,22 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: unless-stopped
+
+  weatherapp:
+    image: 192.168.252.66:5001/distributed-system-mvp/weather-app:0.0.3-otel-collector
+    ports:
+      - 8080:8080
+    networks:
+      - otel_network
+      - default
+    environment:
+      - OTEL_COLLECTOR_HOSTNAME=otel-collector
+      - RABBITMQ_HOSTNAME=rabbitmq
+
+networks:
+  otel_network:
+    external: true

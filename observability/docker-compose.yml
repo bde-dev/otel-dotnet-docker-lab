@@ -22,6 +22,9 @@ services:
       - 8889:8889
       - 13133:13133
       - 55679:55679
+    networks:
+      - otel_network
+      - default
     volumes:
       - ./config/otel-collector-config.yaml:/etc/collector.yaml
 
@@ -48,14 +51,6 @@ services:
     environment:
       - GF_INSTALL_PLUGINS=grafana-lokiexplore-app
 
-  rabbitmq:
-    image: rabbitmq:4-management-alpine
-    ports:
-      - 5672:5672
-      - 15672:15672
-    restart: unless-stopped
-
-  weatherapp:
-    image: 192.168.252.66:5001/distributed-system-mvp/weather-app:0.0.2-otel-collector
-    ports:
-      - 8080:8080
+networks:
+  otel_network:
+    external: true
