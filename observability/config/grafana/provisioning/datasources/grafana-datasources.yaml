@@ -23,6 +23,12 @@ datasources:
     jsonData:
       tracesToLogsV2:
         datasourceUid: loki
+      nodeGraph:
+        enabled: true
+      serviceMap:
+        datasourceUid: prometheus
+      streamingEnabled:
+        search: true
 
   - name: Loki
     type: loki
@@ -39,5 +45,5 @@ datasources:
           matcherRegex: "trace_id"
           matcherType: "label"
           name: TraceID
-          url: '$${__value.raw}'
+          url: "$${__value.raw}"
           urlDisplayLabel: View Trace
