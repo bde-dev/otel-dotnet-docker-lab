@@ -1,0 +1,90 @@
+﻿services:
+  weatherapp:
+    image: weatherapp
+    ports:
+      - 8080:8080
+    environment:
+      - OTEL_COLLECTOR_HOSTNAME=otel-collector
+      - RABBITMQ_HOSTNAME=rabbitmq
+    build:
+      context: .
+      dockerfile: WeatherApp/Dockerfile
+      
+  node_exporter:
+    image: prom/node-exporter:v1.9.1
+    ports:
+      - 9100:9100
+    command:
+      - --path.rootfs=/host
+    volumes:
+      - /:/host:ro,rslave
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.52.0
+    ports:
+      - 8085:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+
+  prometheus:
+    image: prom/prometheus:v3.3.1
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-lifecycle
+      - --web.enable-remote-write-receiver
+    volumes:
+      - ./config/prometheus:/etc/prometheus
+    # noinspection ComposeUnknownValues
+    extra_hosts:
+      host.docker.internal: host-gateway
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.123.0
+    command: [ "--config=/etc/collector.yaml" ]
+    ports:
+      - 4317:4317
+      - 4318:4318
+      - 8888:8888
+      - 8889:8889
+      - 13133:13133
+      - 55679:55679
+    volumes:
+      - ./config/otel-collector-config.yaml:/etc/collector.yaml
+
+  tempo:
+    image: grafana/tempo:2.6.0
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./config/tempo.yaml:/etc/tempo.yaml
+
+  loki:
+    image: grafana/loki:3.5.0
+    command: [ "--config.file=/etc/loki-config.yaml" ]
+    ports:
+      - 3100:3100
+    volumes:
+      - ./config/loki-config.yaml:/etc/loki-config.yaml
+
+  
+  grafana:
+    image: grafana/grafana:12.0.0
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-lokiexplore-app
+      - GF_INSTALL_PLUGINS=grafana-pyroscope-app
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: unless-stopped
