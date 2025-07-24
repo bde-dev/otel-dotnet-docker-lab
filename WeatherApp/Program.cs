@@ -78,9 +78,7 @@ builder.Host.UseSerilog((context, logging) =>
             options.ResourceAttributes = new Dictionary<string, object>
             {
                 { "service.namespace", "weather" },
-                { "system.vendor", "TCSJohnHuxley" },
-                { "service.name", "WeatherApp" },
-                { "node.type", "table" }
+                { "service.name", "WeatherApp" }
             };
         });
 });
@@ -98,9 +96,7 @@ builder.Services.AddOpenTelemetry()
         resource.AddAttributes(new Dictionary<string, object>
         {
             { "service.namespace", "weather" },
-            { "system.vendor", "TCSJohnHuxley" },
-            { "service.name", "WeatherApp" },
-            { "node.type", "table" }
+            { "service.name", "WeatherApp" }
         });
         resource.AddService("WeatherApp");
         resource.AddTelemetrySdk();
