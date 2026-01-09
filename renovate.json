@@ -1,0 +1,49 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "Group all Docker image updates together",
+      "matchDatasources": ["docker"],
+      "groupName": "Docker images",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "description": "Group all NuGet package updates together",
+      "matchDatasources": ["nuget"],
+      "groupName": "NuGet packages",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "description": "Group .NET SDK updates",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["mcr.microsoft.com/dotnet/sdk", "mcr.microsoft.com/dotnet/aspnet"],
+      "groupName": ".NET SDK and Runtime",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "dotnet"
+    },
+    {
+      "description": "Separate major updates for review",
+      "matchUpdateTypes": ["major"],
+      "groupName": "Major dependency updates",
+      "semanticCommitType": "feat",
+      "semanticCommitScope": "deps"
+    }
+  ],
+  "docker": {
+    "enabled": true
+  },
+  "nuget": {
+    "enabled": true
+  },
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  }
+}
