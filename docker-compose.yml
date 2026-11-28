@@ -11,7 +11,7 @@
       dockerfile: WeatherApp/Dockerfile
       
   node_exporter:
-    image: prom/node-exporter:v1.9.1
+    image: prom/node-exporter:v1.13.1
     ports:
       - 9100:9100
     command:
@@ -20,7 +20,7 @@
       - /:/host:ro,rslave
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.52.0
+    image: gcr.io/cadvisor/cadvisor:v0.55.1
     ports:
       - 8085:8080
     volumes:
@@ -31,7 +31,7 @@
       - /dev/disk/:/dev/disk:ro
 
   prometheus:
-    image: prom/prometheus:v3.3.1
+    image: prom/prometheus:v3.16.0
     ports:
       - 9090:9090
     command:
@@ -45,7 +45,7 @@
       host.docker.internal: host-gateway
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.123.0
+    image: otel/opentelemetry-collector-contrib:0.166.0
     command: [ "--config=/etc/collector.yaml" ]
     ports:
       - 4317:4317
@@ -58,13 +58,13 @@
       - ./config/otel-collector-config.yaml:/etc/collector.yaml
 
   tempo:
-    image: grafana/tempo:2.6.0
+    image: grafana/tempo:2.10.10
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
 
   loki:
-    image: grafana/loki:3.5.0
+    image: grafana/loki:3.7.11
     command: [ "--config.file=/etc/loki-config.yaml" ]
     ports:
       - 3100:3100
@@ -73,7 +73,7 @@
 
   
   grafana:
-    image: grafana/grafana:12.0.0
+    image: grafana/grafana:12.4.16
     ports:
       - 3000:3000
     volumes:
